@@ -122,6 +122,8 @@ public class FieldsMetadata {
         nonKeyFieldNames.add(field.name());
 
         final Schema fieldSchema = field.schema();
+        System.out.println("#####################################################\n\n");
+        System.out.println(field.name() + field.schema());
         allFields.put(field.name(), new SinkRecordField(fieldSchema, field.name(), false));
       }
     }
