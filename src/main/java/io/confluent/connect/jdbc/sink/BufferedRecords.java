@@ -92,17 +92,17 @@ public class BufferedRecords {
       // otherwise we flush unnecessarily.
       if (config.deleteEnabled) {
         deletesInBatch = true;
-        System.out.println(" ########################################## HERE 1 \n\n\n");
+        System.out.println(" ######################## HERE 1 \n\n\n");
       }
     } else if (Objects.equals(valueSchema, record.valueSchema())) {
       if (config.deleteEnabled && deletesInBatch) {
         // flush so an insert after a delete of same record isn't lost
-        System.out.println(" ########################################## HERE 2 \n " + record.valueSchema() + "\n\n ");
+        System.out.println(" ################## HERE 2 \n " + record.valueSchema() + "\n\n ");
         flushed.addAll(flush());
       }
     } else {
       // value schema is not null and has changed. This is a real schema change.
-      System.out.println(" ########################################## HERE 3 \n " + record.valueSchema() + "\n\n ");
+      System.out.println(" ################## HERE 3 \n " + record.valueSchema() + "\n\n ");
       valueSchema = record.valueSchema();
       schemaChanged = true;
     }
