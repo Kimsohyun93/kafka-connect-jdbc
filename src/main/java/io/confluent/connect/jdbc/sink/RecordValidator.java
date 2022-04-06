@@ -77,9 +77,7 @@ public interface RecordValidator {
   static RecordValidator requiresValue(JdbcSinkConfig config) {
     return record -> {
       Schema valueSchema = record.valueSchema();
-      if (record.value() != null
-          && valueSchema != null
-          && valueSchema.type() == Schema.Type.STRUCT) {
+      if (record.value() != null) {
         return;
       }
       throw new ConnectException(

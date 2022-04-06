@@ -66,10 +66,6 @@ public class JdbcSinkTask extends SinkTask {
     final DbStructure dbStructure = new DbStructure(dialect);
     log.info("Initializing writer using SQL dialect: {}", dialect.getClass().getSimpleName());
     writer = new JdbcDbWriter(config, dialect, dbStructure);
-    System.out.println("******** \n HERE \n ******** HERE \n *************");
-    System.out.println("CONFIG : " + config);
-    System.out.println("DIALECT : " + dialect);
-    System.out.println("dbStructure : " + dbStructure);
   }
 
   @Override
