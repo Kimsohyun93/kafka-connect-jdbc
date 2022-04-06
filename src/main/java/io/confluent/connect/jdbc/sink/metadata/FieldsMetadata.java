@@ -125,24 +125,9 @@ public class FieldsMetadata {
 
         final Schema fieldSchema = field.schema();
         System.out.println("#####################################################\n\n");
-        System.out.println(field.name() + field.schema());
+        System.out.println(field.name() + "\n" + field.schema().toString());
         allFields.put(field.name(), new SinkRecordField(fieldSchema, field.name(), false));
       }
-    }else {
-      for (Field field : valueSchema.fields()) {
-        if (keyFieldNames.contains(field.name())) {
-          continue;
-        }
-        if (!fieldsWhitelist.isEmpty() && !fieldsWhitelist.contains(field.name())) {
-          continue;
-        }
-
-        nonKeyFieldNames.add(field.name());
-
-        final Schema fieldSchema = field.schema();
-        System.out.println("#####################################################\n\n");
-        System.out.println(field.name() + field.schema());
-        allFields.put(field.name(), new SinkRecordField(fieldSchema, field.name(), false));
     }
 
     if (allFields.isEmpty()) {
