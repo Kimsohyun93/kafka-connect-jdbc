@@ -110,6 +110,8 @@ public class FieldsMetadata {
     }
 
     final Set<String> nonKeyFieldNames = new LinkedHashSet<>();
+    System.out.println("#####################################################\n\n");
+    System.out.println(valueSchema);
     if (valueSchema != null) {
       for (Field field : valueSchema.fields()) {
         if (keyFieldNames.contains(field.name())) {
