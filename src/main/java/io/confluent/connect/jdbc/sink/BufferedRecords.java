@@ -217,28 +217,14 @@ public class BufferedRecords {
       creationTime = dateFormatter.format(parsedTime);
 
       // prod kafka
-      Properties props = new Properties();
-      props.put("bootstrap.servers", "localhost:9092");
-      props.put("acks", "all");
-      props.put("retries", 0);
-      props.put("batch.size", 16384);
-      props.put("linger.ms", 1);
-      props.put("buffer.memory", 33554432);
-      props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-      props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-      Producer<String, String> producer = new KafkaProducer<String, String>(props);
-
       Map<String, Object> kafkaProdData = conField;
       kafkaProdData.put("ApplicationEntity", uriArr[1]);
       kafkaProdData.put("Container", uriArr[2]);
       kafkaProdData.put("CreationTime", creationTime);
-
       try {
-        producer.send(new ProducerRecord<String, String>("refine_spatial", objectMapper.writeValueAsString(kafkaProdData))); //topic, data
-        System.out.println("Message sent successfully" + kafkaProdData);
-        producer.close();
+        prodKafka("refine_spatial", kafkaProdData);
       } catch (Exception e) {
-        System.out.println("Kafka Produce Exception : " + e);
+        e.printStackTrace();
       }
 
       Struct valueStruct = new Struct(valueSchema)
@@ -272,6 +258,27 @@ public class BufferedRecords {
     records = new ArrayList<>();
     deletesInBatch = false;
     return flushedRecords;
+  }
+
+  private void prodKafka(String topic, Map<String, Object> data) throws Exception {
+    Properties props = new Properties();
+    props.put("bootstrap.servers", "localhost:9092");
+    props.put("acks", "all");
+    props.put("retries", 0);
+    props.put("batch.size", 16384);
+    props.put("linger.ms", 1);
+    props.put("buffer.memory", 33554432);
+    props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+    Producer<String, String> producer = new KafkaProducer<String, String>(props);
+
+    try {
+      producer.send(new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(data))); //topic, data
+      System.out.println("Message sent successfully" + data);
+      producer.close();
+    } catch (Exception e) {
+      System.out.println("Kafka Produce Exception : " + e);
+    }
   }
 
   private void executeUpdates() throws SQLException {
