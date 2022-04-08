@@ -116,9 +116,9 @@ public class BufferedRecords {
       final SchemaPair schemaPair = new SchemaPair(
           record.keySchema(),
           SchemaBuilder.struct()
-                  .field("Latitude", Schema.INT64_SCHEMA)
-                  .field("Longitude", Schema.INT64_SCHEMA)
-                  .field("Altitude", Schema.INT64_SCHEMA)
+                  .field("Latitude", Schema.FLOAT64_SCHEMA)
+                  .field("Longitude", Schema.FLOAT64_SCHEMA)
+                  .field("Altitude", Schema.FLOAT64_SCHEMA)
                   .build()
       );
       fieldsMetadata = FieldsMetadata.extract(
