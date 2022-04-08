@@ -197,10 +197,20 @@ public class BufferedRecords {
               .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
               .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
               .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
+      SinkRecord valueRecord =
+              new SinkRecord(
+                      record.topic(),
+                      record.kafkaPartition(),
+                      record.keySchema(),
+                      record.key(),
+                      record.valueSchema(),
+                      valueStruct,
+                      record.kafkaOffset()
+              );
       if (isNull(record.value()) && nonNull(deleteStatementBinder)) {
         deleteStatementBinder.bindRecord(record);
       } else {
-        updateStatementBinder.bindRecord(new SinkRecord(record.topic(), record.kafkaPartition(), record.keySchema(), record.key(), record.valueSchema(), valueStruct, record.kafkaOffset()));
+        updateStatementBinder.bindRecord(valueRecord);
       }
     }
     executeUpdates();
