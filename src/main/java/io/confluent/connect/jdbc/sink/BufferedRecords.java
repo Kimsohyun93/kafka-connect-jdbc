@@ -116,6 +116,8 @@ public class BufferedRecords {
       final SchemaPair schemaPair = new SchemaPair(
           record.keySchema(),
           SchemaBuilder.struct()
+                  .field("ApplicationEntity", Schema.STRING_SCHEMA)
+                  .field("Container", Schema.STRING_SCHEMA)
                   .field("Latitude", Schema.FLOAT64_SCHEMA)
                   .field("Longitude", Schema.FLOAT64_SCHEMA)
                   .field("Altitude", Schema.FLOAT64_SCHEMA)
