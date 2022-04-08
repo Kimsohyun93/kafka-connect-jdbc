@@ -16,6 +16,7 @@
 package io.confluent.connect.jdbc.sink;
 
 import org.apache.kafka.connect.data.Schema;
+import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.slf4j.Logger;
@@ -114,7 +115,11 @@ public class BufferedRecords {
       // re-initialize everything that depends on the record schema
       final SchemaPair schemaPair = new SchemaPair(
           record.keySchema(),
-          record.valueSchema()
+          SchemaBuilder.struct()
+                  .field("Latitude", Schema.INT64_SCHEMA)
+                  .field("Longitude", Schema.INT64_SCHEMA)
+                  .field("Altitude", Schema.INT64_SCHEMA)
+                  .build()
       );
       fieldsMetadata = FieldsMetadata.extract(
           tableId.tableName(),
