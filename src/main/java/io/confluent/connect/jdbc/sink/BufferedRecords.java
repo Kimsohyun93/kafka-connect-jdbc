@@ -191,6 +191,7 @@ public class BufferedRecords {
       if (isNull(record.value()) && nonNull(deleteStatementBinder)) {
         deleteStatementBinder.bindRecord(record);
       } else {
+        System.out.println("########### RECORD" + record.value());
         updateStatementBinder.bindRecord(record);
       }
     }
