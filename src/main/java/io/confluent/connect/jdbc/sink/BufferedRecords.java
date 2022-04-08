@@ -178,7 +178,7 @@ public class BufferedRecords {
     }
     return flushed;
   }
-
+  @SuppressWarnings("unchecked")
   public List<SinkRecord> flush() throws SQLException {
     if (records.isEmpty()) {
       log.debug("Records is empty");
@@ -186,13 +186,11 @@ public class BufferedRecords {
     }
     log.debug("Flushing {} buffered records", records.size());
     for (SinkRecord record : records) {
-      @SuppressWarnings("unchecked")
+      // Parsing to Mobius Data format
       Map<String, Object> recordValue = (Map<String, Object>) record.value();
       Map<String, Object> rceData = (Map<String, Object>) recordValue.get("m2m:rce");
-
       String cinURI = (String) rceData.get("uri");
       String[] uriArr = cinURI.split("/");
-
       Map<String, Object> dataField = (Map<String, Object>) rceData.get("m2m:cin");
       Map<String, Object> conField = (Map<String, Object>) dataField.get("con");
       String creationTime = (String) dataField.get("ct");
@@ -205,6 +203,7 @@ public class BufferedRecords {
         e.printStackTrace();
       }
       creationTime = dateFormatter.format(parsedTime);
+
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", uriArr[1])
               .put("Container", uriArr[2])
