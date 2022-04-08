@@ -198,6 +198,8 @@ public class BufferedRecords {
               .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
               .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
               .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
+      System.out.println("########HERE\n" + record.valueSchema());
+      System.out.println("########HERE\n" + valueStruct);
       SinkRecord valueRecord =
               new SinkRecord(
                       record.topic(),
