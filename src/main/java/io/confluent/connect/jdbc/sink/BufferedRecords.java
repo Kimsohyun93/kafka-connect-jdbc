@@ -30,7 +30,12 @@ import java.sql.Statement;
 import java.sql.BatchUpdateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -178,6 +183,7 @@ public class BufferedRecords {
     }
     return flushed;
   }
+
   @SuppressWarnings("unchecked")
   public List<SinkRecord> flush() throws SQLException {
     if (records.isEmpty()) {
