@@ -273,7 +273,9 @@ public class BufferedRecords {
     Producer<String, String> producer = new KafkaProducer<String, String>(props);
 
     try {
-      producer.send(new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(data))); //topic, data
+      producer.send(
+              new ProducerRecord<String, String>(topic, objectMapper.writeValueAsString(data))
+      );
       System.out.println("Message sent successfully" + data);
       producer.close();
     } catch (Exception e) {

@@ -10,7 +10,7 @@
               files="(BufferedRecords|DataConverter|DatabaseDialect|FieldsMetadata|HanaDialect|JdbcSourceTask|MySqlDatabaseDialect|OracleDatabaseDialect|PostgreSqlDatabaseDialect|PreparedStatementBinder|SqlServerDatabaseDialect|SqliteDatabaseDialect|TimestampIncrementingTableQuerier|GenericDatabaseDialect|SybaseDatabaseDialect|VerticaDatabaseDialect|SapHanaDatabaseDialect|TableId|ColumnDefinition|TableMonitorThread|JdbcSinkTask).java"/>
 
     <suppress checks="ClassDataAbstractionCoupling"
-              files="(DbDialect|JdbcSourceTask|GenericDatabaseDialect).java"/>
+              files="(DbDialect|JdbcSourceTask|GenericDatabaseDialect|BufferedRecords).java"/>
 
     <suppress checks="NPathComplexity"
               files="(BufferedRecords|DataConverter|FieldsMetadata|JdbcSourceTask|GenericDatabaseDialect).java"/>
