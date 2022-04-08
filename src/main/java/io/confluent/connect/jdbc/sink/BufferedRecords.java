@@ -56,7 +56,13 @@ public class BufferedRecords {
 
   private List<SinkRecord> records = new ArrayList<>();
   private Schema keySchema;
-  private Schema valueSchema;
+  private Schema valueSchema = SchemaBuilder.struct()
+          .field("ApplicationEntity", Schema.STRING_SCHEMA)
+          .field("Container", Schema.STRING_SCHEMA)
+          .field("Latitude", Schema.FLOAT64_SCHEMA)
+          .field("Longitude", Schema.FLOAT64_SCHEMA)
+          .field("Altitude", Schema.FLOAT64_SCHEMA)
+          .build();
   private RecordValidator recordValidator;
   private FieldsMetadata fieldsMetadata;
   private PreparedStatement updatePreparedStatement;
@@ -64,7 +70,6 @@ public class BufferedRecords {
   private StatementBinder updateStatementBinder;
   private StatementBinder deleteStatementBinder;
   private boolean deletesInBatch = false;
-
   public BufferedRecords(
       JdbcSinkConfig config,
       TableId tableId,
@@ -117,13 +122,7 @@ public class BufferedRecords {
       // re-initialize everything that depends on the record schema
       final SchemaPair schemaPair = new SchemaPair(
           record.keySchema(),
-          SchemaBuilder.struct()
-                  .field("ApplicationEntity", Schema.STRING_SCHEMA)
-                  .field("Container", Schema.STRING_SCHEMA)
-                  .field("Latitude", Schema.FLOAT64_SCHEMA)
-                  .field("Longitude", Schema.FLOAT64_SCHEMA)
-                  .field("Altitude", Schema.FLOAT64_SCHEMA)
-                  .build()
+          valueSchema
       );
       fieldsMetadata = FieldsMetadata.extract(
           tableId.tableName(),
@@ -193,13 +192,13 @@ public class BufferedRecords {
       @SuppressWarnings("unchecked")
       Map<String, Object> jsonMap = (Map<String, Object>) record.value();
       System.out.println("########HERE\n" + record.valueSchema());
-      Struct valueStruct = new Struct(record.valueSchema())
+      Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
               .put("Container", jsonMap.get("Container"))
               .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
               .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
               .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
-      System.out.println("########HERE\n" + valueStruct);
+      System.out.println("########HERE\n" + valueSchema);
       SinkRecord valueRecord =
               new SinkRecord(
                       record.topic(),
