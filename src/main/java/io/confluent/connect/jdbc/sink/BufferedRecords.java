@@ -190,6 +190,7 @@ public class BufferedRecords {
     }
     log.debug("Flushing {} buffered records", records.size());
     for (SinkRecord record : records) {
+      @SuppressWarnings("unchecked")
       Map<String, Object> jsonMap = (Map<String, Object>) record.value();
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
