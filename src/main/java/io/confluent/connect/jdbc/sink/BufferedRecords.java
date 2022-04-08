@@ -15,6 +15,10 @@
 
 package io.confluent.connect.jdbc.sink;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
@@ -36,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -74,6 +79,7 @@ public class BufferedRecords {
   private StatementBinder updateStatementBinder;
   private StatementBinder deleteStatementBinder;
   private boolean deletesInBatch = false;
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   public BufferedRecords(
       JdbcSinkConfig config,
@@ -209,6 +215,31 @@ public class BufferedRecords {
         e.printStackTrace();
       }
       creationTime = dateFormatter.format(parsedTime);
+
+      // prod kafka
+      Properties props = new Properties();
+      props.put("bootstrap.servers", "localhost:9092");
+      props.put("acks", "all");
+      props.put("retries", 0);
+      props.put("batch.size", 16384);
+      props.put("linger.ms", 1);
+      props.put("buffer.memory", 33554432);
+      props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+      props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+      Producer<String, String> producer = new KafkaProducer<String, String>(props);
+
+      Map<String, Object> kafkaProdData = conField;
+      kafkaProdData.put("ApplicationEntity", uriArr[1]);
+      kafkaProdData.put("Container", uriArr[2]);
+      kafkaProdData.put("CreationTime", creationTime);
+
+      try {
+        producer.send(new ProducerRecord<String, String>("refine_spatial", objectMapper.writeValueAsString(kafkaProdData))); //topic, data
+        System.out.println("Message sent successfully" + kafkaProdData);
+        producer.close();
+      } catch (Exception e) {
+        System.out.println("Kafka Produce Exception : " + e);
+      }
 
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", uriArr[1])
