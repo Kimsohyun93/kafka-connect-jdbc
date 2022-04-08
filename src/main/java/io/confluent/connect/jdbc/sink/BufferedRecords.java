@@ -17,6 +17,7 @@ package io.confluent.connect.jdbc.sink;
 
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
+import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.errors.ConnectException;
 import org.apache.kafka.connect.sink.SinkRecord;
 import org.slf4j.Logger;
@@ -27,10 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.BatchUpdateException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -188,11 +186,17 @@ public class BufferedRecords {
     }
     log.debug("Flushing {} buffered records", records.size());
     for (SinkRecord record : records) {
+      Map<String, Object> jsonMap = (Map<String, Object>) record.value();
+      Struct valueStruct = new Struct(valueSchema)
+              .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
+              .put("Container", jsonMap.get("Container"))
+              .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude"):0.0)
+              .put("Longitude", jsonMap.get("Longitude")!= null ? jsonMap.get("Longitude"):0.0)
+              .put("Altitude", jsonMap.get("Altitude")!= null ? jsonMap.get("Altitude"):0.0);
       if (isNull(record.value()) && nonNull(deleteStatementBinder)) {
         deleteStatementBinder.bindRecord(record);
       } else {
-        System.out.println("########### RECORD" + record.value());
-        updateStatementBinder.bindRecord(record);
+        updateStatementBinder.bindRecord(new SinkRecord(record.topic(), record.kafkaPartition(), record.keySchema(), record.key(), record.valueSchema(), valueStruct, record.kafkaOffset()));
       }
     }
     executeUpdates();
