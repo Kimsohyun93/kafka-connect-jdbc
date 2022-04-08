@@ -192,7 +192,6 @@ public class BufferedRecords {
     for (SinkRecord record : records) {
       @SuppressWarnings("unchecked")
       Map<String, Object> jsonMap = (Map<String, Object>) record.value();
-      System.out.println("########HERE\n" + record.valueSchema());
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
               .put("Container", jsonMap.get("Container"))
@@ -200,13 +199,14 @@ public class BufferedRecords {
               .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
               .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
       System.out.println("########HERE\n" + valueSchema);
+      System.out.println("########HERE\n" + valueStruct);
       SinkRecord valueRecord =
               new SinkRecord(
                       record.topic(),
                       record.kafkaPartition(),
                       record.keySchema(),
                       record.key(),
-                      record.valueSchema(),
+                      valueSchema,
                       valueStruct,
                       record.kafkaOffset()
               );
