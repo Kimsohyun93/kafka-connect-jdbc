@@ -110,8 +110,6 @@ public class FieldsMetadata {
     }
 
     final Set<String> nonKeyFieldNames = new LinkedHashSet<>();
-    System.out.println("#####################################################\n\n");
-    System.out.println(valueSchema);
     if (valueSchema != null) {
       for (Field field : valueSchema.fields()) {
         if (keyFieldNames.contains(field.name())) {
@@ -124,8 +122,6 @@ public class FieldsMetadata {
         nonKeyFieldNames.add(field.name());
 
         final Schema fieldSchema = field.schema();
-        System.out.println("#####################################################\n\n");
-        System.out.println(field.name() + "\n" + field.schema().toString());
         allFields.put(field.name(), new SinkRecordField(fieldSchema, field.name(), false));
       }
     }

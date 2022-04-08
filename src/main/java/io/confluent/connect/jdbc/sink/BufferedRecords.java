@@ -28,11 +28,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.BatchUpdateException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -62,6 +60,7 @@ public class BufferedRecords {
           .field("Latitude", Schema.FLOAT64_SCHEMA)
           .field("Longitude", Schema.FLOAT64_SCHEMA)
           .field("Altitude", Schema.FLOAT64_SCHEMA)
+          .field("CreationTime", Schema.STRING_SCHEMA)
           .build();
   private RecordValidator recordValidator;
   private FieldsMetadata fieldsMetadata;
@@ -102,17 +101,14 @@ public class BufferedRecords {
       // otherwise we flush unnecessarily.
       if (config.deleteEnabled) {
         deletesInBatch = true;
-        System.out.println(" ######################## HERE 1 \n\n\n");
       }
     } else if (Objects.equals(valueSchema, record.valueSchema())) {
       if (config.deleteEnabled && deletesInBatch) {
         // flush so an insert after a delete of same record isn't lost
-        System.out.println(" ########### HERE 2 \n " + record.valueSchema().toString() + "\n\n ");
         flushed.addAll(flush());
       }
     } else {
       // value schema is not null and has changed. This is a real schema change.
-      System.out.println(" ############# HERE 3 \n " + record.valueSchema().toString() + "\n\n ");
       valueSchema = record.valueSchema();
       schemaChanged = true;
     }
@@ -191,15 +187,32 @@ public class BufferedRecords {
     log.debug("Flushing {} buffered records", records.size());
     for (SinkRecord record : records) {
       @SuppressWarnings("unchecked")
-      Map<String, Object> jsonMap = (Map<String, Object>) record.value();
+      Map<String, Object> recordValue = (Map<String, Object>) record.value();
+      Map<String, Object> rceData = (Map<String, Object>) recordValue.get("m2m:rce");
+
+      String cinURI = (String) rceData.get("uri");
+      String[] uriArr = cinURI.split("/");
+
+      Map<String, Object> dataField = (Map<String, Object>) rceData.get("m2m:cin");
+      Map<String, Object> conField = (Map<String, Object>) dataField.get("con");
+      String creationTime = (String) dataField.get("ct");
+      SimpleDateFormat dateParser  = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
+      SimpleDateFormat  dateFormatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+      Date parsedTime = null;
+      try {
+        parsedTime = dateParser.parse(creationTime);
+      } catch (ParseException e) {
+        e.printStackTrace();
+      }
+      creationTime = dateFormatter.format(parsedTime);
       Struct valueStruct = new Struct(valueSchema)
-              .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
-              .put("Container", jsonMap.get("Container"))
-              .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
-              .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
-              .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
-      System.out.println("########HERE\n" + valueSchema);
-      System.out.println("########HERE\n" + valueStruct);
+              .put("ApplicationEntity", uriArr[1])
+              .put("Container", uriArr[2])
+              .put("Latitude", conField.get("Latitude") != null ? conField.get("Latitude") : 0.0)
+              .put("Longitude", conField.get("Longitude") != null ? conField.get("Longitude") : 0.0)
+              .put("Altitude", conField.get("Altitude") != null ? conField.get("Altitude") : 0.0)
+              .put("CreationTime", creationTime);
+
       SinkRecord valueRecord =
               new SinkRecord(
                       record.topic(),
