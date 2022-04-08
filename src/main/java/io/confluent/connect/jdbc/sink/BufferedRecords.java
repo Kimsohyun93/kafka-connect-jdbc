@@ -192,7 +192,7 @@ public class BufferedRecords {
     for (SinkRecord record : records) {
       @SuppressWarnings("unchecked")
       Map<String, Object> jsonMap = (Map<String, Object>) record.value();
-      Struct valueStruct = new Struct(valueSchema)
+      Struct valueStruct = new Struct(record.valueSchema())
               .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
               .put("Container", jsonMap.get("Container"))
               .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
