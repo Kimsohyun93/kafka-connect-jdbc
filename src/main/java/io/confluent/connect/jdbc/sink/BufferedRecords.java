@@ -28,7 +28,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.BatchUpdateException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -190,9 +194,9 @@ public class BufferedRecords {
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", jsonMap.get("ApplicationEntity"))
               .put("Container", jsonMap.get("Container"))
-              .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude"):0.0)
-              .put("Longitude", jsonMap.get("Longitude")!= null ? jsonMap.get("Longitude"):0.0)
-              .put("Altitude", jsonMap.get("Altitude")!= null ? jsonMap.get("Altitude"):0.0);
+              .put("Latitude", jsonMap.get("Latitude") != null ? jsonMap.get("Latitude") : 0.0)
+              .put("Longitude", jsonMap.get("Longitude") != null ? jsonMap.get("Longitude") : 0.0)
+              .put("Altitude", jsonMap.get("Altitude") != null ? jsonMap.get("Altitude") : 0.0);
       if (isNull(record.value()) && nonNull(deleteStatementBinder)) {
         deleteStatementBinder.bindRecord(record);
       } else {
