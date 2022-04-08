@@ -70,6 +70,7 @@ public class BufferedRecords {
   private StatementBinder updateStatementBinder;
   private StatementBinder deleteStatementBinder;
   private boolean deletesInBatch = false;
+
   public BufferedRecords(
       JdbcSinkConfig config,
       TableId tableId,
