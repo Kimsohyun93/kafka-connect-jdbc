@@ -227,12 +227,13 @@ public class BufferedRecords {
         e.printStackTrace();
       }
 
+      System.out.println("###########HERE" + conField.get("Altitude").getClass());
       Struct valueStruct = new Struct(valueSchema)
               .put("ApplicationEntity", uriArr[1])
               .put("Container", uriArr[2])
-              .put("Latitude", conField.get("Latitude") != null ? conField.get("Latitude") : 0.0)
-              .put("Longitude", conField.get("Longitude") != null ? conField.get("Longitude") : 0.0)
-              .put("Altitude", conField.get("Altitude") != null ? conField.get("Altitude") : 0.0)
+              .put("Latitude", conField.get("Latitude") instanceof Double ? conField.get("Latitude") : 0.0)
+              .put("Longitude", conField.get("Longitude") instanceof Double ? conField.get("Longitude") : 0.0)
+              .put("Altitude", conField.get("Altitude") instanceof Double ? conField.get("Altitude") : 0.0)
               .put("CreationTime", creationTime);
 
       SinkRecord valueRecord =
