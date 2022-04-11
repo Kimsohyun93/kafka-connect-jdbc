@@ -16,10 +16,10 @@
               files="(BufferedRecords|DataConverter|FieldsMetadata|JdbcSourceTask|GenericDatabaseDialect).java"/>
 
     <suppress checks="JavaNCSS"
-              files="(DataConverter|FieldsMetadata|JdbcSourceTask|GenericDatabaseDialect).java"/>
+              files="(DataConverter|FieldsMetadata|JdbcSourceTask|GenericDatabaseDialect|BufferedRecords).java"/>
 
     <suppress checks="MethodLength"
-              files="(DataConverter|GenericDatabaseDialect|JdbcSourceTask|BufferedRecords).java"/>
+              files="(DataConverter|GenericDatabaseDialect|JdbcSourceTask).java"/>
 
     <suppress checks="ParameterNumber"
               files="(ColumnDefinition|GenericDatabaseDialect|SqlServerDatabaseDialect|PostgreSqlDatabaseDialect|TimestampIncrementingTableQuerier).java"/>
