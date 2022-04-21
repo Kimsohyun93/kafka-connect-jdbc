@@ -222,7 +222,7 @@ public class BufferedRecords {
       kafkaProdData.put("Container", uriArr[2]);
       kafkaProdData.put("CreationTime", creationTime);
       try {
-        prodKafka("refine_spatial", kafkaProdData);
+        prodKafka("refine.spatial", kafkaProdData);
       } catch (Exception e) {
         e.printStackTrace();
       }
