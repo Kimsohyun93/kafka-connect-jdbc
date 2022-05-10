@@ -65,12 +65,12 @@ public class BufferedRecords {
   private List<SinkRecord> records = new ArrayList<>();
   private Schema keySchema;
   private Schema valueSchema = SchemaBuilder.struct()
-          .field("ApplicationEntity", Schema.STRING_SCHEMA)
-          .field("Container", Schema.STRING_SCHEMA)
-          .field("Latitude", Schema.FLOAT64_SCHEMA)
-          .field("Longitude", Schema.FLOAT64_SCHEMA)
-          .field("Altitude", Schema.FLOAT64_SCHEMA)
-          .field("CreationTime", Schema.STRING_SCHEMA)
+          .field("applicationentity", Schema.STRING_SCHEMA)
+          .field("container", Schema.STRING_SCHEMA)
+          .field("latitude", Schema.FLOAT64_SCHEMA)
+          .field("longitude", Schema.FLOAT64_SCHEMA)
+          .field("altitude", Schema.FLOAT64_SCHEMA)
+          .field("creationtime", Schema.STRING_SCHEMA)
           .build();
   private RecordValidator recordValidator;
   private FieldsMetadata fieldsMetadata;
@@ -218,9 +218,9 @@ public class BufferedRecords {
 
       // prod kafka
       Map<String, Object> kafkaProdData = conField;
-      kafkaProdData.put("ApplicationEntity", uriArr[1]);
-      kafkaProdData.put("Container", uriArr[2]);
-      kafkaProdData.put("CreationTime", creationTime);
+      kafkaProdData.put("applicationentity", uriArr[1]);
+      kafkaProdData.put("container", uriArr[2]);
+      kafkaProdData.put("creationtime", creationTime);
       try {
         prodKafka("refine.spatial", kafkaProdData);
       } catch (Exception e) {
@@ -228,12 +228,12 @@ public class BufferedRecords {
       }
 
       Struct valueStruct = new Struct(valueSchema)
-              .put("ApplicationEntity", uriArr[1])
-              .put("Container", uriArr[2])
-              .put("Latitude", conField.get("Latitude") instanceof Double ? conField.get("Latitude") : 0.0)
-              .put("Longitude", conField.get("Longitude") instanceof Double ? conField.get("Longitude") : 0.0)
-              .put("Altitude", conField.get("Altitude") instanceof Double ? conField.get("Altitude") : 0.0)
-              .put("CreationTime", creationTime);
+              .put("applicationentity", uriArr[1])
+              .put("container", uriArr[2])
+              .put("latitude", conField.get("latitude") instanceof Double ? conField.get("latitude") : 0.0)
+              .put("longitude", conField.get("longitude") instanceof Double ? conField.get("longitude") : 0.0)
+              .put("altitude", conField.get("altitude") instanceof Double ? conField.get("altitude") : 0.0)
+              .put("creationtime", creationTime);
 
       SinkRecord valueRecord =
               new SinkRecord(
