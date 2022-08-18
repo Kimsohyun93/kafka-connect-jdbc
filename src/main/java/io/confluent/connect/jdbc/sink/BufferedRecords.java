@@ -228,9 +228,9 @@ public class BufferedRecords {
       Struct valueStruct = new Struct(valueSchema)
               .put("applicationentity", uriArr[2])
               .put("container", uriArr[3])
-              .put("latitude", conField.get("latitude") instanceof Double ? conField.get("latitude") : 0.0)
-              .put("longitude", conField.get("longitude") instanceof Double ? conField.get("longitude") : 0.0)
-              .put("altitude", conField.get("altitude") instanceof Double ? conField.get("altitude") : 0.0)
+              .put("latitude", conField.get("latitude") instanceof Double ? (Double)(conField.get("latitude")) : 0.0)
+              .put("longitude", conField.get("longitude") instanceof Double ? (Double)conField.get("longitude") : 0.0)
+              .put("altitude", conField.get("altitude") instanceof Double ? (Double)conField.get("altitude") : 0.0)
               .put("creationtime", creationTime);
 
       SinkRecord valueRecord =
