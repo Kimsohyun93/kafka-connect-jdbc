@@ -200,12 +200,10 @@ public class BufferedRecords {
     for (SinkRecord record : records) {
       // Parsing to Mobius Data format
       Map<String, Object> recordValue = (Map<String, Object>) record.value();
-      Map<String, Object> rceData = (Map<String, Object>) recordValue.get("m2m:rce");
-      String cinURI = (String) rceData.get("uri");
+      String cinURI = (String) recordValue.get("pi");
       String[] uriArr = cinURI.split("/");
-      Map<String, Object> dataField = (Map<String, Object>) rceData.get("m2m:cin");
-      Map<String, Object> conField = (Map<String, Object>) dataField.get("con");
-      String creationTime = (String) dataField.get("ct");
+      Map<String, Object> conField = (Map<String, Object>) recordValue.get("con");
+      String creationTime = (String) recordValue.get("ct");
       SimpleDateFormat dateParser  = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
       SimpleDateFormat  dateFormatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
       Date parsedTime = null;
@@ -218,8 +216,8 @@ public class BufferedRecords {
 
       // prod kafka
       Map<String, Object> kafkaProdData = conField;
-      kafkaProdData.put("applicationentity", uriArr[1]);
-      kafkaProdData.put("container", uriArr[2]);
+      kafkaProdData.put("applicationentity", uriArr[2]);
+      kafkaProdData.put("container", uriArr[3]);
       kafkaProdData.put("creationtime", creationTime);
       try {
         prodKafka("refine.spatial", kafkaProdData);
@@ -228,8 +226,8 @@ public class BufferedRecords {
       }
 
       Struct valueStruct = new Struct(valueSchema)
-              .put("applicationentity", uriArr[1])
-              .put("container", uriArr[2])
+              .put("applicationentity", uriArr[2])
+              .put("container", uriArr[3])
               .put("latitude", conField.get("latitude") instanceof Double ? conField.get("latitude") : 0.0)
               .put("longitude", conField.get("longitude") instanceof Double ? conField.get("longitude") : 0.0)
               .put("altitude", conField.get("altitude") instanceof Double ? conField.get("altitude") : 0.0)
