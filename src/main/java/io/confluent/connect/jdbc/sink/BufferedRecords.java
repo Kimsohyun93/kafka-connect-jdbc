@@ -223,7 +223,7 @@ public class BufferedRecords {
 
       Iterator<String> iteratorKey = cf.keySet().iterator(); // 키값 오름차순
       Map<String, Object> conField = new HashMap<>();
-      while (iteratorKey.hasNext()){
+      while (iteratorKey.hasNext()) {
         String key = iteratorKey.next();
         conField.put(key.toLowerCase(), cf.get(key));
       }
