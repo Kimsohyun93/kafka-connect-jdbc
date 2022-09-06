@@ -190,6 +190,31 @@ public class BufferedRecords {
     return flushed;
   }
 
+
+
+  /**
+   * {"rn":"4-202209060223544915105",
+   * "ty":"4",
+   * "pi":"/Mobius/ae/cnt",
+   * "ri":"/Mobius/ae/cnt/4-202209060223544915105","
+   * ct":"20220906T022354",
+   * "lt":"20220906T022354","
+   * st":11,
+   * "et":"20240906T022354",
+   * "cs":"62",
+   * "cnf":"",
+   * "con":{"Latitude":16.45243,"Longitude":100.48484,"Altitude":13.4646},
+   * "acpi":[],
+   * "lbl":[],
+   * "at":[],
+   * "aa":[],
+   * "subl":[],
+   * "or":"",
+   * "cr":"S20170717074825768bp2l",
+   * "spi":"3-20220817050017027728",
+   * "sri":"4-20220906022354491376"}
+   */
+
   @SuppressWarnings("unchecked")
   public List<SinkRecord> flush() throws SQLException {
     if (records.isEmpty()) {
@@ -224,6 +249,9 @@ public class BufferedRecords {
       } catch (Exception e) {
         e.printStackTrace();
       }
+
+      System.out.println("################## \n\n \nHERE JDBC : :: ::: ");
+      System.out.println(conField.get("latitude") instanceof Double);
 
       Struct valueStruct = new Struct(valueSchema)
               .put("applicationentity", uriArr[2])
