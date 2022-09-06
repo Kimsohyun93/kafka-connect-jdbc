@@ -34,7 +34,15 @@ import java.sql.Statement;
 import java.sql.BatchUpdateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -217,8 +225,7 @@ public class BufferedRecords {
     for (SinkRecord record : records) {
       // Parsing to Mobius Data format
       Map<String, Object> recordValue = (Map<String, Object>) record.value();
-      String cinURI = (String) recordValue.get("pi");
-      String[] uriArr = cinURI.split("/");
+
       Map<String, Object> cf = (Map<String, Object>) recordValue.get("con");
 
       Iterator<String> iteratorKey = cf.keySet().iterator(); // 키값 오름차순
@@ -228,6 +235,10 @@ public class BufferedRecords {
         conField.put(key.toLowerCase(), cf.get(key));
       }
       //Map<String, Object> conField = (Map<String, Object>) recordValue.get("con");
+
+      String cinURI = (String) recordValue.get("pi");
+      String[] uriArr = cinURI.split("/");
+
 
       String creationTime = (String) recordValue.get("ct");
       SimpleDateFormat dateParser  = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
