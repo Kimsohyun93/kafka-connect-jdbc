@@ -34,13 +34,7 @@ import java.sql.Statement;
 import java.sql.BatchUpdateException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import io.confluent.connect.jdbc.dialect.DatabaseDialect;
@@ -225,7 +219,16 @@ public class BufferedRecords {
       Map<String, Object> recordValue = (Map<String, Object>) record.value();
       String cinURI = (String) recordValue.get("pi");
       String[] uriArr = cinURI.split("/");
-      Map<String, Object> conField = (Map<String, Object>) recordValue.get("con");
+      Map<String, Object> cf = (Map<String, Object>) recordValue.get("con");
+
+      Iterator<String> iteratorKey = cf.keySet().iterator(); // 키값 오름차순
+      Map<String, Object> conField = new HashMap<>();
+      while (iteratorKey.hasNext()){
+        String key = iteratorKey.next();
+        conField.put(key.toLowerCase(), cf.get(key));
+      }
+      //Map<String, Object> conField = (Map<String, Object>) recordValue.get("con");
+
       String creationTime = (String) recordValue.get("ct");
       SimpleDateFormat dateParser  = new SimpleDateFormat("yyyyMMdd'T'HHmmss");
       SimpleDateFormat  dateFormatter   = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
