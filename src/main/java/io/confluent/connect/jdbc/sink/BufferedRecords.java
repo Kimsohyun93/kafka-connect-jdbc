@@ -250,6 +250,7 @@ public class BufferedRecords {
 
       System.out.println("################## \n\n \nHERE JDBC : :: ::: ::::");
       System.out.println(conField.get("latitude") instanceof Double);
+      System.out.println("THIS IS CONFIELD : "+ conField);
       System.out.println(conField.get("latitude").getClass().getName());
 
       Struct valueStruct = new Struct(valueSchema)
