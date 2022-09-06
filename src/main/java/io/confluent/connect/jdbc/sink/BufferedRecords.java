@@ -248,7 +248,7 @@ public class BufferedRecords {
         e.printStackTrace();
       }
 
-      System.out.println("################## \n\n \nHERE JDBC : :: ::: ");
+      System.out.println("################## \n\n \nHERE JDBC : :: ::: ::::");
       System.out.println(conField.get("latitude") instanceof Double);
       System.out.println(conField.get("latitude").getClass().getName());
 
