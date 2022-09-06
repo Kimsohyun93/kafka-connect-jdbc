@@ -190,8 +190,6 @@ public class BufferedRecords {
     return flushed;
   }
 
-
-
   /**
    * {"rn":"4-202209060223544915105",
    * "ty":"4",
@@ -252,6 +250,7 @@ public class BufferedRecords {
 
       System.out.println("################## \n\n \nHERE JDBC : :: ::: ");
       System.out.println(conField.get("latitude") instanceof Double);
+      System.out.println(conField.get("latitude").getClass().getName());
 
       Struct valueStruct = new Struct(valueSchema)
               .put("applicationentity", uriArr[2])
